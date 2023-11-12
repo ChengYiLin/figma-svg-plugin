@@ -6,6 +6,7 @@ import { FigmaSVGEvent } from "../types/event";
 
 function Plugin() {
   const [selectedSVG, setSelectedSVG] = useState<string | undefined>();
+  const [svgString, setSVGString] = useState<string | undefined>();
 
   useEffect(() => {
     window.onmessage = (event) => {
@@ -14,6 +15,10 @@ function Plugin() {
       switch (type) {
         case "GET_ICON_NAME":
           setSelectedSVG(data.name);
+          break;
+
+        case "GET_ICON_SVG_STRING":
+          setSVGString(data.svg);
           break;
       }
     };
@@ -24,7 +29,13 @@ function Plugin() {
       <h1 class="text-xl font-bold mb-2">SVG-Worker</h1>
 
       <div class="py-2">
-        <p class="text-sm">Selected SVG : {selectedSVG ?? "--"}</p>
+        <p class="text-sm">
+          <b>Selected SVG :</b> {selectedSVG ?? "--"}
+        </p>
+
+        <div class="py-4">
+          <code>{svgString || "null"}</code>
+        </div>
       </div>
     </main>
   );

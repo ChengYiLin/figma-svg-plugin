@@ -4,8 +4,8 @@ import handleSelectedSVG from "./handler/selectedSVG";
 
 export default function () {
   showUI({
-    height: 360,
-    width: 320,
+    height: 400,
+    width: 360,
   });
 
   figma.on("selectionchange", () => {
