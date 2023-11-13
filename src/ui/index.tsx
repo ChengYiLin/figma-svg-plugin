@@ -1,14 +1,13 @@
 import { render } from "@create-figma-plugin/ui";
 import { h } from "preact";
-import { useState, useEffect } from "preact/hooks";
+import { useEffect } from "preact/hooks";
 import "!./style/output.css";
-import { FigmaSVGEvent } from "../types/event";
+
+import { useSVGPluginMessage } from "./hooks/useSVGPluginMessage";
 import { useSVG } from "./hooks/useSVG";
 
 function Plugin() {
-  const [selectedSVG, setSelectedSVG] = useState<string | undefined>();
-  const [svgString, setSVGString] = useState<string | undefined>();
-
+  const { svgString, selectedSVG } = useSVGPluginMessage();
   const { isLoading, postSVGData, data: svgCode } = useSVG();
 
   useEffect(() => {
@@ -25,22 +24,6 @@ function Plugin() {
       });
     }
   }, [svgString]);
-
-  useEffect(() => {
-    window.onmessage = (event) => {
-      const { type, data } = event.data.pluginMessage as FigmaSVGEvent;
-
-      switch (type) {
-        case "GET_ICON_NAME":
-          setSelectedSVG(data.name);
-          break;
-
-        case "GET_ICON_SVG_STRING":
-          setSVGString(data.svg);
-          break;
-      }
-    };
-  }, []);
 
   return (
     <main class="p-2">
