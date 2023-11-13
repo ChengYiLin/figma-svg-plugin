@@ -3,10 +3,28 @@ import { h } from "preact";
 import { useState, useEffect } from "preact/hooks";
 import "!./style/output.css";
 import { FigmaSVGEvent } from "../types/event";
+import { useSVG } from "./hooks/useSVG";
 
 function Plugin() {
   const [selectedSVG, setSelectedSVG] = useState<string | undefined>();
   const [svgString, setSVGString] = useState<string | undefined>();
+
+  const { isLoading, postSVGData, data: svgCode } = useSVG();
+
+  useEffect(() => {
+    if (svgString && selectedSVG) {
+      postSVGData({
+        code: svgString,
+        options: {
+          typescript: true,
+          prettier: true,
+          prettierConfig: {
+            semi: true,
+          },
+        },
+      });
+    }
+  }, [svgString]);
 
   useEffect(() => {
     window.onmessage = (event) => {
@@ -34,7 +52,11 @@ function Plugin() {
         </p>
 
         <div class="py-4">
-          <code>{svgString || "null"}</code>
+          {isLoading ? (
+            <p>Loading ...</p>
+          ) : (
+            <code>{svgCode?.output ?? "null"}</code>
+          )}
         </div>
       </div>
     </main>

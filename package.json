@@ -2,13 +2,17 @@
   "dependencies": {
     "@create-figma-plugin/ui": "^3.0.2",
     "@create-figma-plugin/utilities": "^3.0.2",
-    "preact": ">=10"
+    "axios": "^1.6.1",
+    "preact": ">=10",
+    "swr": "^2.2.4"
   },
   "devDependencies": {
     "@create-figma-plugin/build": "^3.0.2",
     "@create-figma-plugin/tsconfig": "^3.0.2",
     "@figma/plugin-typings": "1.79.0",
+    "@types/react": "^18.2.37",
     "concurrently": ">=8",
+    "prettier": "^3.1.0",
     "tailwindcss": ">=3",
     "typescript": ">=4"
   },
