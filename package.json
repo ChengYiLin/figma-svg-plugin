@@ -3,6 +3,7 @@
     "@create-figma-plugin/ui": "^3.0.2",
     "@create-figma-plugin/utilities": "^3.0.2",
     "axios": "^1.6.1",
+    "octokit": "^3.1.2",
     "preact": ">=10",
     "swr": "^2.2.4"
   },
