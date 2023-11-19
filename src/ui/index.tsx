@@ -13,7 +13,7 @@ function Plugin() {
   const { svgString, selectedSVG } = useSVGPluginMessage();
   const { isLoading, postSVGData, data: svgCode } = useSVG();
 
-  const { settingAuthToken, user } = useOctokit();
+  const { user, settingAuthToken, createPullRequest } = useOctokit();
 
   useEffect(() => {
     if (svgString && selectedSVG) {
@@ -35,7 +35,7 @@ function Plugin() {
       <h1 class="text-xl font-bold mb-2">SVG-Worker</h1>
 
       <div class="mb-4">
-        <p class="text-sm mb-2">Github Auth Token :</p>
+        <p class="text-sm font-black mb-2">Github Auth Token :</p>
         <div class="flex gap-4">
           <input
             class="border border-slate-600 border-solid flex-1 px-2"
@@ -54,6 +54,14 @@ function Plugin() {
           </button>
         </div>
         <p>{!!user ? `Hi, ${user.name}` : "Please Submit token"}</p>
+        <div>
+          <button
+            class="bg-green-600 px-4 py-2 text-white"
+            onClick={createPullRequest}
+          >
+            Create PR
+          </button>
+        </div>
       </div>
 
       <div class="py-2">

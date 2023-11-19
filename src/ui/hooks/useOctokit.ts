@@ -1,15 +1,25 @@
 import { Octokit } from "octokit";
-import { useState, useEffect } from "preact/hooks";
+import { useState, useEffect, useRef } from "preact/hooks";
+
+// Pull Request Setting Info
+const owner = "ChengYiLin";
+const repo = "WeHelp-TodoList";
+const title = "Test2: octokit js create PR";
+const base = "main";
+const head = "feat/context";
+const body = "Your pull request description";
 
 export const useOctokit = () => {
   const [authToken, setAuthToken] = useState<string | undefined>();
   const [user, setUser] = useState<any>();
 
+  const octokit = useRef<Octokit>();
+
   useEffect(() => {
     if (authToken) {
       (async () => {
-        const octokit = new Octokit({ auth: authToken });
-        const { data } = await octokit.rest.users.getAuthenticated();
+        octokit.current = new Octokit({ auth: authToken });
+        const { data } = await octokit.current.rest.users.getAuthenticated();
         setUser(data);
       })();
     }
@@ -19,8 +29,33 @@ export const useOctokit = () => {
     setAuthToken(token);
   };
 
+  const createPullRequest = async () => {
+    if (!octokit.current) {
+      console.error("Please resend your token");
+      return;
+    }
+
+    try {
+      const result = (
+        await octokit.current.rest.pulls.create({
+          owner,
+          repo,
+          title,
+          body,
+          head,
+          base,
+        })
+      ).data;
+
+      console.log(result);
+    } catch (error) {
+      console.error("Error creating pull request:", error);
+    }
+  };
+
   return {
     user,
     settingAuthToken,
+    createPullRequest,
   };
 };
