@@ -1,6 +1,7 @@
 .DS_Store
 *.log
 *.css.d.ts
+*.env
 output.css
 /build/
 /manifest.json
