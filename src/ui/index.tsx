@@ -13,7 +13,8 @@ function Plugin() {
   const { svgString, selectedSVG } = useSVGPluginMessage();
   const { isLoading, postSVGData, data: svgCode } = useSVG();
 
-  const { user, settingAuthToken, createPullRequest } = useOctokit();
+  const { user, settingAuthToken, createPullRequest, createNewBranch } =
+    useOctokit();
 
   useEffect(() => {
     if (svgString && selectedSVG) {
@@ -54,12 +55,25 @@ function Plugin() {
           </button>
         </div>
         <p>{!!user ? `Hi, ${user.name}` : "Please Submit token"}</p>
-        <div>
+        <div class="flex gap-4">
           <button
             class="bg-green-600 px-4 py-2 text-white"
             onClick={createPullRequest}
           >
             Create PR
+          </button>
+
+          <button
+            class="bg-purple-600 px-4 py-2 text-white"
+            onClick={() => {
+              if (!selectedSVG) {
+                console.error("Please Select  SVG First");
+                return;
+              }
+              createNewBranch(selectedSVG);
+            }}
+          >
+            Create New Branch
           </button>
         </div>
       </div>

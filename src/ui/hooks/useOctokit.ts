@@ -19,6 +19,7 @@ export const useOctokit = () => {
     if (authToken) {
       (async () => {
         octokit.current = new Octokit({ auth: authToken });
+
         const { data } = await octokit.current.rest.users.getAuthenticated();
         setUser(data);
       })();
@@ -53,9 +54,37 @@ export const useOctokit = () => {
     }
   };
 
+  const createNewBranch = async (newBranchName: string) => {
+    if (!octokit.current) {
+      console.error("Please resend your token");
+      return;
+    }
+
+    try {
+      const baseBranchRef = `heads/${base}`;
+      const { data: baseBranchRefResponse } =
+        await octokit.current.rest.git.getRef({
+          owner,
+          repo,
+          ref: baseBranchRef,
+        });
+      const latestCommitSha = baseBranchRefResponse.object.sha;
+
+      await octokit.current.rest.git.createRef({
+        owner,
+        repo,
+        ref: `refs/heads/${newBranchName}`,
+        sha: latestCommitSha,
+      });
+    } catch (error) {
+      console.error(`Create New Branch (${newBranchName}) Error : ${error}`);
+    }
+  };
+
   return {
     user,
     settingAuthToken,
     createPullRequest,
+    createNewBranch,
   };
 };
