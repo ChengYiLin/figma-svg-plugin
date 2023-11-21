@@ -13,8 +13,13 @@ function Plugin() {
   const { svgString, selectedSVG } = useSVGPluginMessage();
   const { isLoading, postSVGData, data: svgCode } = useSVG();
 
-  const { user, settingAuthToken, createPullRequest, createNewBranch } =
-    useOctokit();
+  const {
+    user,
+    settingAuthToken,
+    createPullRequest,
+    createNewBranch,
+    createCommit,
+  } = useOctokit();
 
   useEffect(() => {
     if (svgString && selectedSVG) {
@@ -37,6 +42,7 @@ function Plugin() {
 
       <div class="mb-4">
         <p class="text-sm font-black mb-2">Github Auth Token :</p>
+
         <div class="flex gap-4">
           <input
             class="border border-slate-600 border-solid flex-1 px-2"
@@ -54,8 +60,12 @@ function Plugin() {
             Submit
           </button>
         </div>
-        <p>{!!user ? `Hi, ${user.name}` : "Please Submit token"}</p>
-        <div class="flex gap-4">
+
+        <p class="mb-4">
+          {!!user ? `Hi, ${user.name}` : "Please Submit token"}
+        </p>
+
+        <div class="flex gap-4 mb-4">
           <button
             class="bg-green-600 px-4 py-2 text-white"
             onClick={createPullRequest}
@@ -74,6 +84,21 @@ function Plugin() {
             }}
           >
             Create New Branch
+          </button>
+        </div>
+        <div>
+          <button
+            class="bg-red-600 px-4 py-2 text-white"
+            onClick={() => {
+              if (!selectedSVG || !svgCode?.output) {
+                console.error("Please Select  SVG First");
+                return;
+              }
+
+              createCommit(selectedSVG, svgCode.output);
+            }}
+          >
+            Create Commit
           </button>
         </div>
       </div>
